@@ -1,0 +1,7 @@
+{
+    "name":"fnevents-desctop",
+    "version": "v1.0.0",
+    "scripts":{
+        "start":"electron ."
+    }
+}
