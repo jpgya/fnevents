@@ -1,7 +1,11 @@
 {
-    "name":"fnevents-desctop",
+    "name": "fnevents-desctop",
     "version": "v1.0.0",
-    "scripts":{
-        "start":"electron ."
+    "main":"main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "dependencies": {
+        "electron": "^38.2.0"
     }
 }
