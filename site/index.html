@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNEVENTS 公式サイト</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e2f;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4b3cff;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    main {
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .download-buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .download-buttons a {
+      display: inline-block;
+      padding: 15px 30px;
+      background-color: #ff4b3c;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .download-buttons a:hover {
+      background-color: #ff6b5c;
+    }
+    .notice {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #ffcc00;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FNEVENTS</h1>
+    <p>ガチ勢向けフォートナイト大会カレンダー通知サービス</p>
+  </header>
+  <main>
+    <h2>ソフト版ダウンロード</h2>
+    <div class="download-buttons">
+      <a href="#" onclick="alert('Windows版は開発中です')">Windows版</a>
+      <a href="#" onclick="alert('Mac版は開発中です')">Mac版</a>
+    </div>
+    <p class="notice">
+      現在ソフト版は開発中です。ブラウザ版はいかがですか？
+    </p>
+    <div class="download-buttons">
+      <a href="./browser/index.html">ブラウザ版はこちら</a>
+    </div>
+  </main>
+</body>
+</html>
