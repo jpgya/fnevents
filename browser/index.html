@@ -135,36 +135,38 @@ footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
 </header>
 
 <div class="layout">
-<aside class="panel sidebar">
-<div class="month">
-<div>
-<div id="monthTitle" class="muted-small">--</div>
-<div id="monthRange" class="muted">--</div>
-</div>
-<div>
-<button id="prevMonth" class="btn-ghost">◀</button>
-<button id="nextMonth" class="btn-ghost">▶</button>
-</div>
-</div>
+  <!-- 左側：カレンダーのみ -->
+  <aside class="panel sidebar">
+    <div class="month">
+      <div>
+        <div id="monthTitle" class="muted-small">--</div>
+        <div id="monthRange" class="muted">--</div>
+      </div>
+      <div>
+        <button id="prevMonth" class="btn-ghost">◀</button>
+        <button id="nextMonth" class="btn-ghost">▶</button>
+      </div>
+    </div>
+    <div class="calendar" id="calendarGrid"></div>
+  </aside>
 
-<div class="calendar" id="calendarGrid"></div>
-
-<div style="margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:space-between">
-<div class="small muted-small">リマインダー保存: localStorage</div>
-<button id="clearReminders" class="btn-ghost">リセット</button>
-</div>
-</aside>
-
-<main class="panel">
-<div class="toolbar">
-<div>
-<div class="small muted-small">イベント数</div>
-<div id="eventCount" class="title">0</div>
-</div>
-<div class="small muted-small">注意: ブラウザを閉じるとページ内タイマーは停止します。永続通知はサービスワーカー+Pushが必要です。</div>
-</div>
-<div id="events" class="event-list"></div>
-</main>
+  <!-- 右側：イベントリスト＋リマインド設定 -->
+  <main class="panel">
+    <div class="toolbar">
+      <div>
+        <div class="small muted-small">イベント数</div>
+        <div id="eventCount" class="title">0</div>
+      </div>
+      <div class="small muted-small">
+        注意: ブラウザを閉じるとページ内タイマーは停止します。永続通知はサービスワーカー+Pushが必要です。
+      </div>
+    </div>
+    <div id="events" class="event-list"></div>
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:space-between">
+      <div class="small muted-small">リマインダー保存: localStorage</div>
+      <button id="clearReminders" class="btn-ghost">リセット</button>
+    </div>
+  </main>
 </div>
 </div>
 
@@ -172,10 +174,12 @@ footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
 const EVENTS_URL='https://fljpapi.vigyanfv.workers.dev/tournamentlist?region=ASIA&platform=Windows&cosmeticsinfo=true';
 const REMIND_BEFORE_MIN=15;
 
-function fmtDateTime(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;}
+function fmtDateTime(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
 function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
 
-let events=[]; // id -> event
+let events=[]; 
 let viewDate=new Date();
 const scheduledTimers={};
 
@@ -184,7 +188,12 @@ function saveReminders(arr){localStorage.setItem('fn_reminders',JSON.stringify(a
 function addReminder(r){const all=loadReminders();all.push(r);saveReminders(all);}
 function removeReminder(id){const all=loadReminders().filter(x=>x.id!==id);saveReminders(all);}
 
-async function requestPermission(){if(!('Notification'in window))return alert('このブラウザは Notifications をサポートしていません');const p=await Notification.requestPermission();document.getElementById('req-perm').textContent=(p==='granted')?'通知許可済み':'通知許可';return p;}
+async function requestPermission(){
+  if(!('Notification' in window)) return alert('このブラウザは Notifications をサポートしていません');
+  const p=await Notification.requestPermission();
+  document.getElementById('req-perm').textContent=(p==='granted')?'通知許可済み':'通知許可';
+  return p;
+}
 
 function scheduleReminder(rem){
   const now=Date.now();
@@ -200,7 +209,7 @@ function scheduleReminder(rem){
     }
     removeReminder(rem.id);
     delete scheduledTimers[rem.id];
-    render();
+    renderEvents(); // カレンダーは再レンダリング不要
   },timeout);
   scheduledTimers[rem.id]=tid;
 }
@@ -228,7 +237,8 @@ async function fetchEvents(){
         });
       });
     });
-    render();
+    renderCalendar();
+    renderEvents();
   }catch(e){console.error(e);alert('イベントの取得に失敗しました。');}
 }
 
@@ -276,7 +286,7 @@ function renderEvents(){
       if(Notification.permission!=='granted'){const p=await requestPermission();if(p!=='granted')return;}
       const id='rem_'+(ev.id||Math.random().toString(36).slice(2));
       const rem={id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN};
-      addReminder(rem);scheduleReminder(rem);render();
+      addReminder(rem);scheduleReminder(rem);renderEvents();
       subscribe.textContent='セット済み';subscribe.disabled=true;
     };
 
@@ -289,20 +299,26 @@ function renderEvents(){
   });
 }
 
-function render(){renderCalendar();renderEvents();}
-
-document.getElementById('prevMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);render();});
-document.getElementById('nextMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);render();});
+document.getElementById('prevMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);renderCalendar();});
+document.getElementById('nextMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);renderCalendar();});
 document.getElementById('refresh').addEventListener('click',fetchEvents);
 document.getElementById('req-perm').addEventListener('click',requestPermission);
-document.getElementById('clearReminders').addEventListener('click',()=>{if(confirm('全てのリマインダーを削除しますか？')){localStorage.removeItem('fn_reminders');Object.values(scheduledTimers).forEach(t=>clearTimeout(t));for(const k in scheduledTimers)delete scheduledTimers[k];render();}});
+document.getElementById('clearReminders').addEventListener('click',()=>{
+  if(confirm('全てのリマインダーを削除しますか？')){
+    localStorage.removeItem('fn_reminders');
+    Object.values(scheduledTimers).forEach(t=>clearTimeout(t));
+    for(const k in scheduledTimers) delete scheduledTimers[k];
+    renderEvents();
+  }
+});
 
-(function(){restoreAndSchedule();fetchEvents().catch(()=>{});render();})();
+(function(){restoreAndSchedule();fetchEvents().catch(()=>{});renderCalendar();renderEvents();})();
 
-// --- Service Worker registration for notifications ---
+// Service Worker registration
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').then(reg=>console.log('SW registered')).catch(err=>console.warn('SW failed',err));
 }
 </script>
 </body>
+
 </html>
