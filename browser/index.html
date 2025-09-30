@@ -18,7 +18,7 @@ html,body{
 }
 
 .wrap{
-  max-width:1100px;
+  max-width:1200px; /* 少し余裕を持たせる */
   margin:28px auto;
   padding:20px;
 }
@@ -51,12 +51,12 @@ button{
 
 .layout{
   display:grid;
-  grid-template-columns:minmax(360px,360px) 1fr; /* カレンダーは固定最低幅360px */
+  grid-template-columns:minmax(360px, 1fr) minmax(400px, 1fr); /* 左右最小幅確保、フレキシブル */
   gap:18px;
 }
 
 .sidebar{
-  flex-shrink:0; /* 縮まらない */
+  flex-shrink:0;
 }
 
 .panel{
@@ -65,8 +65,7 @@ button{
   padding:14px;
   border:1px solid var(--border);
   box-shadow:var(--shadow);
-  min-width:300px; /* イベントリストも最低幅確保 */
-  flex-shrink:0;
+  min-width:300px;
 }
 
 .sidebar .month{
@@ -122,7 +121,7 @@ button{
   gap:10px;
   overflow-y:auto;
   max-height:70vh;
-  min-width:300px;
+  min-width:350px; /* 右側のイベントリストも最低幅確保 */
 }
 
 .event-card{
@@ -144,6 +143,7 @@ button{
 .muted-small{color:var(--muted)}
 footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
 
+/* レスポンシブ */
 @media (max-width:900px){
   .layout{grid-template-columns:1fr}
   .sidebar{order:2}
