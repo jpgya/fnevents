@@ -10,145 +10,70 @@
   --shadow:0 8px 24px rgba(15,23,42,0.06);
   font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
 }
-
 html,body{
-  height:100%;
-  margin:0;
+  height:100%; margin:0;
   background:linear-gradient(180deg,var(--bg),#eaf3fb);
 }
-
 .wrap{
-  max-width:1200px; /* 少し余裕を持たせる */
-  margin:28px auto;
-  padding:20px;
+  max-width:1200px; margin:28px auto; padding:20px;
 }
-
 header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:18px;
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;
 }
-
 h1{font-size:20px;margin:0}
 .controls{display:flex;gap:8px;align-items:center}
-
 button{
-  background:var(--accent);
-  color:#fff;
-  border:none;
-  padding:8px 12px;
-  border-radius:10px;
-  cursor:pointer;
-  box-shadow:var(--shadow);
+  background:var(--accent); color:#fff; border:none; padding:6px 12px;
+  border-radius:10px; cursor:pointer; box-shadow:var(--shadow);
 }
-
 .btn-ghost{
-  background:transparent;
-  color:var(--accent);
-  border:1px solid rgba(31,142,241,0.12);
+  background:transparent; color:var(--accent); border:1px solid rgba(31,142,241,0.12);
 }
-
 .layout{
-  display:grid;
-  grid-template-columns:minmax(360px, 1fr) minmax(400px, 1fr); /* 左右最小幅確保、フレキシブル */
-  gap:18px;
+  display:grid; grid-template-columns:minmax(320px,1fr) minmax(400px,1fr); gap:18px;
 }
-
-.sidebar{
-  flex-shrink:0;
-}
-
+.sidebar{flex-shrink:0;}
 .panel{
-  background:var(--panel);
-  border-radius:var(--radius);
-  padding:14px;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  min-width:300px;
+  background:var(--panel); border-radius:var(--radius); padding:14px;
+  border:1px solid var(--border); box-shadow:var(--shadow); min-width:300px;
 }
-
 .sidebar .month{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
 }
-
 .calendar{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
+  display:grid; grid-template-columns:repeat(7,1fr); gap:4px;
 }
-
 .calendar .day{
-  padding:8px;
-  border-radius:8px;
-  text-align:center;
-  background:linear-gradient(180deg,#fff,#fbfdff);
-  border:1px solid #f0f6fb;
-  min-height:70px;
+  padding:4px; border-radius:6px; text-align:center;
+  background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid #f0f6fb;
+  min-height:40px; font-size:12px; cursor:pointer;
 }
-
 .day .date{font-weight:600}
-.day .events{
-  margin-top:6px;
-  font-size:11px;
-  text-align:left;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-  overflow:hidden;
-}
-
 .day .events div{
-  white-space:nowrap;
-  text-overflow:ellipsis;
-  overflow:hidden;
+  font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-
-.today{box-shadow:0 0 0 2px rgba(31,142,241,0.12)}
-
+.today{box-shadow:0 0 0 2px rgba(31,142,241,0.12);}
 .toolbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
 }
-
 .event-list{
-  display:grid;
-  gap:10px;
-  overflow-y:auto;
-  max-height:70vh;
-  min-width:350px; /* 右側のイベントリストも最低幅確保 */
+  display:grid; gap:10px; overflow-y:auto; max-height:70vh; min-width:350px;
 }
-
 .event-card{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px;
-  border-radius:10px;
-  background:linear-gradient(180deg,#ffffff,#fbfdff);
-  border:1px solid #f0f6fb;
-  flex-shrink:0;
-  word-break:break-word;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px; border-radius:10px; background:linear-gradient(180deg,#ffffff,#fbfdff);
+  border:1px solid #f0f6fb; flex-shrink:0; word-break:break-word;
 }
-
 .meta{font-size:13px}
 .title{font-weight:700}
-.when{color:var(--muted);font-size:13px}
+.when{color:var(--muted); font-size:13px}
 .small{font-size:13px}
 .muted-small{color:var(--muted)}
-footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
-
-/* レスポンシブ */
-@media (max-width:12000px){
+footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px;}
+@media (max-width:900px){
   .layout{grid-template-columns:1fr}
   .sidebar{order:2}
 }
-
 </style>
 </head>
 <body>
@@ -162,7 +87,7 @@ footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
 </header>
 
 <div class="layout">
-  <!-- 左側：カレンダーのみ -->
+  <!-- 左側：カレンダー -->
   <aside class="panel sidebar">
     <div class="month">
       <div>
@@ -177,7 +102,7 @@ footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
     <div class="calendar" id="calendarGrid"></div>
   </aside>
 
-  <!-- 右側：イベントリスト＋リマインド設定 -->
+  <!-- 右側：イベント詳細 -->
   <main class="panel">
     <div class="toolbar">
       <div>
@@ -185,7 +110,7 @@ footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
         <div id="eventCount" class="title">0</div>
       </div>
       <div class="small muted-small">
-        注意: ブラウザを閉じるとページ内タイマーは停止します。永続通知はサービスワーカー+Pushが必要です。
+        注意: ブラウザを閉じるとページ内タイマーは停止します。永続通知はServiceWorker+Pushが必要です。
       </div>
     </div>
     <div id="events" class="event-list"></div>
@@ -236,7 +161,7 @@ function scheduleReminder(rem){
     }
     removeReminder(rem.id);
     delete scheduledTimers[rem.id];
-    renderEvents(); // カレンダーは再レンダリング不要
+    renderEvents();
   },timeout);
   scheduledTimers[rem.id]=tid;
 }
@@ -270,58 +195,73 @@ async function fetchEvents(){
 }
 
 function renderCalendar(){
-  const grid=document.getElementById('calendarGrid');grid.innerHTML='';
+  const grid=document.getElementById('calendarGrid'); grid.innerHTML='';
   const start=new Date(viewDate.getFullYear(),viewDate.getMonth(),1);
   const startWeekDay=start.getDay();
   const firstCell=addDays(start,-startWeekDay);
+
   for(let i=0;i<42;i++){
     const d=addDays(firstCell,i);
-    const cell=document.createElement('div');cell.className='day';
-    if(d.getMonth()!==viewDate.getMonth())cell.style.opacity=0.45;
-    const dateDiv=document.createElement('div');dateDiv.className='date';dateDiv.textContent=d.getDate();
-    cell.appendChild(dateDiv);
-    const eventsOnDay=events.filter(ev=>new Date(ev.startUtc).toDateString()===d.toDateString()).slice(0,3);
+    const cell=document.createElement('div'); cell.className='day';
+    if(d.getMonth()!==viewDate.getMonth()) cell.style.opacity=0.4;
+
+    const dateDiv=document.createElement('div'); dateDiv.className='date';
+    dateDiv.textContent=d.getDate(); cell.appendChild(dateDiv);
+
+    const eventsOnDay=events.filter(ev=>new Date(ev.startUtc).toDateString()===d.toDateString());
     if(eventsOnDay.length){
-      const evWrap=document.createElement('div');evWrap.className='events';
-      eventsOnDay.forEach(ev=>{
-        const e=document.createElement('div');e.textContent='• '+ev.title;e.title=ev.title;e.style.fontSize='12px';e.style.whiteSpace='nowrap';e.style.overflow='hidden';e.style.textOverflow='ellipsis';
+      const evWrap=document.createElement('div'); evWrap.className='events';
+      eventsOnDay.slice(0,2).forEach(ev=>{
+        const e=document.createElement('div');
+        e.textContent='• ' + ev.title;
         evWrap.appendChild(e);
       });
       cell.appendChild(evWrap);
     }
-    if(d.toDateString()===new Date().toDateString())cell.classList.add('today');
+
+    if(d.toDateString()===new Date().toDateString()) cell.classList.add('today');
+
+    // 日付クリックで右側イベント詳細表示
+    cell.addEventListener('click',()=>renderEvents(eventsOnDay));
+
     grid.appendChild(cell);
   }
+
   document.getElementById('monthTitle').textContent=viewDate.toLocaleString('default',{month:'long',year:'numeric'});
-  document.getElementById('monthRange').textContent=`${new Date(viewDate.getFullYear(),viewDate.getMonth(),1).toLocaleDateString()} – ${new Date(viewDate.getFullYear(),viewDate.getMonth()+1,0).toLocaleDateString()}`;
+  document.getElementById('monthRange').textContent=
+    `${new Date(viewDate.getFullYear(),viewDate.getMonth(),1).toLocaleDateString()} – ${new Date(viewDate.getFullYear(),viewDate.getMonth()+1,0).toLocaleDateString()}`;
 }
 
-function renderEvents(){
-  const container=document.getElementById('events');container.innerHTML='';
-  const sorted=[...new Map(events.map(e=>[e.id,e])).values()].sort((a,b)=>new Date(a.startUtc)-new Date(b.startUtc));
+function renderEvents(list=null){
+  const container=document.getElementById('events'); container.innerHTML='';
+  const sorted=list ? [...list] : [...events];
+  sorted.sort((a,b)=>new Date(a.startUtc)-new Date(b.startUtc));
   document.getElementById('eventCount').textContent=sorted.length;
+
   sorted.forEach(ev=>{
-    const card=document.createElement('div');card.className='event-card';
-    const left=document.createElement('div');left.className='meta';
-    const t=document.createElement('div');t.className='title';t.textContent=ev.title;
-    const when=document.createElement('div');when.className='when';when.textContent=fmtDateTime(new Date(ev.startUtc))+(ev.region?` · ${ev.region}`:'');
-    left.appendChild(t);left.appendChild(when);
+    const card=document.createElement('div'); card.className='event-card';
+    const left=document.createElement('div'); left.className='meta';
+    const t=document.createElement('div'); t.className='title'; t.textContent=ev.title;
+    const when=document.createElement('div'); when.className='when';
+    when.textContent=fmtDateTime(new Date(ev.startUtc)) + (ev.region?` · ${ev.region}`:'');
+    left.appendChild(t); left.appendChild(when);
 
     const right=document.createElement('div');
-    const subscribe=document.createElement('button');subscribe.textContent='リマインド';
+    const subscribe=document.createElement('button'); subscribe.textContent='リマインド';
     subscribe.onclick=async ()=>{
-      if(Notification.permission!=='granted'){const p=await requestPermission();if(p!=='granted')return;}
+      if(Notification.permission!=='granted'){ const p=await requestPermission(); if(p!=='granted') return; }
       const id='rem_'+(ev.id||Math.random().toString(36).slice(2));
-      const rem={id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN};
-      addReminder(rem);scheduleReminder(rem);renderEvents();
-      subscribe.textContent='セット済み';subscribe.disabled=true;
+      addReminder({id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN});
+      scheduleReminder({id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN});
+      renderEvents(list);
+      subscribe.textContent='セット済み'; subscribe.disabled=true;
     };
 
     const existing=loadReminders().find(r=>r.timeUtc===ev.startUtc && r.title===ev.title);
-    if(existing){subscribe.textContent='セット済み';subscribe.disabled=true;}
+    if(existing){subscribe.textContent='セット済み'; subscribe.disabled=true;}
 
     right.appendChild(subscribe);
-    card.appendChild(left);card.appendChild(right);
+    card.appendChild(left); card.appendChild(right);
     container.appendChild(card);
   });
 }
@@ -347,5 +287,4 @@ if('serviceWorker' in navigator){
 }
 </script>
 </body>
-
 </html>
