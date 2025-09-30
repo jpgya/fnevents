@@ -74,6 +74,25 @@ footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px;}
   .layout{grid-template-columns:1fr}
   .sidebar{order:2}
 }
+/* カレンダーのイベント文字を小さくして改行も許可 */
+.calendar .day .events div {
+  font-size:9px;           /* 文字をさらに小さく */
+  line-height:1em;         /* 行間を圧縮 */
+  max-height:2.2em;        /* 最大2行まで表示 */
+  overflow:hidden;         
+  text-overflow:ellipsis;  
+  white-space:normal;      /* 改行を許可 */
+  word-break:break-word;   /* 単語も途中で改行 */
+}
+
+/* 日付も少し小さく */
+.day .date {
+  font-size:10px;
+  font-weight:600;
+}
+
+/* 1セルあたりのイベント表示数を制限 */
+
 </style>
 </head>
 <body>
