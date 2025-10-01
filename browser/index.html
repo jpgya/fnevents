@@ -38,145 +38,142 @@
 
 <title>Fortnite Tournament Calendar — Browser</title>
 <style>
-/* === カレンダー全体 === */
-.calendar {
+/* === レイアウト（カレンダーとイベントリストの2カラム） === */
+.layout {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  background: #2b2d31; /* Discord背景 */
-  border-radius: 8px;
-  padding: 4px;
-  font-family: "gg sans", "Noto Sans JP", sans-serif;
-  color: #dcddde;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+  margin-top: 16px;
 }
 
-/* === 曜日ヘッダー === */
-.calendar-header {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: 600;
-  color: #b9bbbe;
-  background: #313338;
-  border-bottom: 1px solid #202225;
-}
-.calendar-header div {
-  padding: 8px 0;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* === 日セル === */
-.calendar .day {
-  background: #36393f;
-  border: 1px solid #202225;
-  min-height: 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 6px;
-  font-size: 12px;
-  border-radius: 4px;
-  position: relative;
-  transition: background 0.15s ease;
-}
-.calendar .day:hover {
-  background: #3e4147;
-}
-
-/* === 日付番号 === */
-.day .date {
-  font-weight: 600;
-  font-size: 12px;
-  margin-bottom: 4px;
-  color: #dcddde;
-}
-
-/* === 今日のセル === */
-.day.today {
-  border: 2px solid #5865f2;
-  background: #40444b;
-}
-
-/* === イベント === */
-.day .events {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 100%;
-}
-.day .events div {
-  font-size: 11px;
-  background: #5865f2;
-  color: #fff;
-  border-radius: 4px;
-  padding: 2px 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* === ボタン（Discord風） === */
-button {
-  background: #5865f2; /* Discordブルー */
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
-}
-button:hover {
-  background: #4752c4;
-}
-button:active {
-  transform: scale(0.96);
-}
-button:disabled {
-  background: #4f545c;
-  color: #b9bbbe;
-  cursor: not-allowed;
-}
-
-/* === 見出し（タイトルなど） === */
-h1, h2, h3 {
-  color: #fff;
-  font-weight: 700;
-  margin: 8px 0;
-}
-
-/* === 全体の背景 & ラッパー === */
-body {
-  background: #313338; /* Discordっぽい全体背景 */
-  margin: 0;
-  padding: 16px;
-  font-family: "gg sans", "Noto Sans JP", sans-serif;
-  color: #dcddde;
-}
-
-/* === カード風コンテナ（カレンダーを囲む用） === */
-.calendar-wrapper {
+/* === パネル（Discord風カード） === */
+.panel {
   background: #2b2d31;
   border: 1px solid #202225;
   border-radius: 8px;
   padding: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sidebar {
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+.panel::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+.panel::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 4px;
+}
+.panel::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track {
+  background: #2b2d31;
 }
 
-/* === ナビゲーション部分（例：前月・次月ボタン） === */
-.calendar-nav {
+/* === ヘッダー部分 === */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* === ツールバー（右上部のイベント数など） === */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  font-size: 12px;
+  color: #b9bbbe;
+}
+.toolbar .title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+.small {
+  font-size: 12px;
+}
+.muted-small {
+  font-size: 11px;
+  color: #b9bbbe;
+}
+.muted {
+  color: #b9bbbe;
+}
+
+/* === イベントカード === */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.event-card {
+  background: #36393f;
+  border: 1px solid #202225;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease;
+}
+.event-card:hover {
+  background: #3e4147;
+}
+.event-card .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.event-card .title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+.event-card .when {
+  font-size: 12px;
+  color: #b9bbbe;
+}
+
+/* === 月表示部分（サイドバー上部） === */
+.month {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
-.calendar-nav .month {
-  font-weight: 700;
-  font-size: 15px;
-  color: #fff;
+.month .muted-small {
+  font-size: 12px;
+  color: #b9bbbe;
+}
+.month .muted {
+  font-size: 13px;
+  color: #dcddde;
+}
+
+/* === ゴーストボタン（枠線のみ） === */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #4f545c;
+  color: #dcddde;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease, border 0.15s ease;
+}
+.btn-ghost:hover {
+  background: #4f545c;
+  border-color: #5865f2;
 }
 
 </style>
