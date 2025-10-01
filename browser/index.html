@@ -38,16 +38,19 @@
 
 <title>Fortnite Tournament Calendar — Browser</title>
 <style>
+/* === カレンダー全体 === */
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-  background: #2b2d31; /* Discordの背景 */
+  background: #2b2d31; /* Discord背景 */
   border-radius: 8px;
   padding: 4px;
+  font-family: "gg sans", "Noto Sans JP", sans-serif;
+  color: #dcddde;
 }
 
-/* 曜日ヘッダー */
+/* === 曜日ヘッダー === */
 .calendar-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -64,7 +67,7 @@
   letter-spacing: 0.5px;
 }
 
-/* カレンダーの1日セル */
+/* === 日セル === */
 .calendar .day {
   background: #36393f;
   border: 1px solid #202225;
@@ -82,7 +85,7 @@
   background: #3e4147;
 }
 
-/* 日付 */
+/* === 日付番号 === */
 .day .date {
   font-weight: 600;
   font-size: 12px;
@@ -90,13 +93,13 @@
   color: #dcddde;
 }
 
-/* 今日 */
+/* === 今日のセル === */
 .day.today {
   border: 2px solid #5865f2;
   background: #40444b;
 }
 
-/* イベント表示 */
+/* === イベント === */
 .day .events {
   display: flex;
   flex-direction: column;
@@ -114,7 +117,7 @@
   text-overflow: ellipsis;
 }
 
-/* ボタン（Discord風） */
+/* === ボタン（Discord風） === */
 button {
   background: #5865f2; /* Discordブルー */
   color: #fff;
@@ -127,10 +130,10 @@ button {
   transition: background 0.15s ease, transform 0.1s ease;
 }
 button:hover {
-  background: #4752c4; /* Hoverで少し暗く */
+  background: #4752c4;
 }
 button:active {
-  transform: scale(0.96); /* 押した感 */
+  transform: scale(0.96);
 }
 button:disabled {
   background: #4f545c;
@@ -138,7 +141,43 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* 1セルあたりのイベント表示数を制限 */
+/* === 見出し（タイトルなど） === */
+h1, h2, h3 {
+  color: #fff;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+/* === 全体の背景 & ラッパー === */
+body {
+  background: #313338; /* Discordっぽい全体背景 */
+  margin: 0;
+  padding: 16px;
+  font-family: "gg sans", "Noto Sans JP", sans-serif;
+  color: #dcddde;
+}
+
+/* === カード風コンテナ（カレンダーを囲む用） === */
+.calendar-wrapper {
+  background: #2b2d31;
+  border: 1px solid #202225;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* === ナビゲーション部分（例：前月・次月ボタン） === */
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.calendar-nav .month {
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+}
 
 </style>
 </head>
