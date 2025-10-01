@@ -38,142 +38,157 @@
 
 <title>Fortnite Tournament Calendar — Browser</title>
 <style>
-/* === レイアウト（カレンダーとイベントリストの2カラム） === */
-.layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 16px;
-  margin-top: 16px;
+/* === 全体背景 === */
+body {
+  background: #313338;
+  margin: 0;
+  padding: 16px;
+  font-family: "gg sans", "Noto Sans JP", sans-serif;
+  color: #dcddde;
 }
 
-/* === パネル（Discord風カード） === */
-.panel {
+/* === カレンダー全体 === */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: #202225; /* グリッドの線として表示 */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* === 曜日ヘッダー === */
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #b9bbbe;
+  background: #2b2d31;
+}
+.calendar-header div {
+  padding: 8px 0;
+  border-right: 1px solid #202225;
+}
+.calendar-header div:last-child {
+  border-right: none;
+}
+
+/* === 日セル === */
+.calendar .day {
+  background: #36393f;
+  border: 1px solid #202225;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px;
+  font-size: 12px;
+  transition: background 0.15s ease;
+}
+.calendar .day:hover {
+  background: #3e4147;
+}
+
+/* === 日付番号 === */
+.day .date {
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #fff;
+}
+
+/* === 今日 === */
+.day.today {
+  border: 2px solid #5865f2;
+  background: #40444b;
+}
+
+/* === イベント === */
+.day .events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+.day .events div {
+  font-size: 11px;
+  background: #5865f2;
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === ボタン === */
+button {
+  background: #5865f2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+button:hover {
+  background: #4752c4;
+}
+button:active {
+  transform: scale(0.96);
+}
+button:disabled {
+  background: #4f545c;
+  color: #b9bbbe;
+  cursor: not-allowed;
+}
+
+/* === リマインダー一覧 === */
+.reminders {
+  margin-top: 16px;
   background: #2b2d31;
   border: 1px solid #202225;
   border-radius: 8px;
   padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
-.sidebar {
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
-}
-.panel::-webkit-scrollbar,
-.sidebar::-webkit-scrollbar {
-  width: 8px;
-}
-.panel::-webkit-scrollbar-thumb,
-.sidebar::-webkit-scrollbar-thumb {
-  background: #202225;
-  border-radius: 4px;
-}
-.panel::-webkit-scrollbar-track,
-.sidebar::-webkit-scrollbar-track {
-  background: #2b2d31;
-}
-
-/* === ヘッダー部分 === */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.controls {
-  display: flex;
-  gap: 8px;
-}
-
-/* === ツールバー（右上部のイベント数など） === */
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 12px;
-  font-size: 12px;
-  color: #b9bbbe;
-}
-.toolbar .title {
-  font-size: 20px;
+.reminders h2 {
+  font-size: 14px;
   font-weight: 700;
+  margin: 0 0 8px 0;
   color: #fff;
 }
-.small {
-  font-size: 12px;
-}
-.muted-small {
-  font-size: 11px;
-  color: #b9bbbe;
-}
-.muted {
-  color: #b9bbbe;
-}
-
-/* === イベントカード === */
-.event-list {
+.reminder-item {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.event-card {
+  align-items: center;
+  justify-content: space-between;
   background: #36393f;
   border: 1px solid #202225;
   border-radius: 6px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 8px;
+  margin-bottom: 6px;
   transition: background 0.15s ease;
 }
-.event-card:hover {
+.reminder-item:hover {
   background: #3e4147;
 }
-.event-card .meta {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.event-card .title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-}
-.event-card .when {
-  font-size: 12px;
-  color: #b9bbbe;
-}
-
-/* === 月表示部分（サイドバー上部） === */
-.month {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.month .muted-small {
-  font-size: 12px;
-  color: #b9bbbe;
-}
-.month .muted {
+.reminder-item .title {
   font-size: 13px;
-  color: #dcddde;
-}
-
-/* === ゴーストボタン（枠線のみ） === */
-.btn-ghost {
-  background: transparent;
-  border: 1px solid #4f545c;
-  color: #dcddde;
   font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background 0.15s ease, border 0.15s ease;
+  color: #dcddde;
 }
-.btn-ghost:hover {
-  background: #4f545c;
-  border-color: #5865f2;
+.reminder-item .time {
+  font-size: 12px;
+  color: #b9bbbe;
+}
+.reminder-item button {
+  background: #5865f2;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
 }
 
 </style>
