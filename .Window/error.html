@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エラーが発生したようです。</title>
+    <link rel="stylesheet" href="error.css">
+</head>
+<body>
+    <div class="container">
+        <h1>あれれ、エラーが発生したようです。</h1>
+        <p>以下のボタンを押して、再起動するか、公式Discordサーバーに参加してください。</p>
+        <div class="buttons">
+            <button id="restartBtn">再起動</button>
+            <button id="discordBtn">Discord</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('restartBtn').addEventListener('click', () => {
+          
+            require('electron').app.relaunch();
+            require('electron').app.exit();
+        });
+
+        document.getElementById('discordBtn').addEventListener('click', () => {
+           
+            require('electron').shell.openExternal('https://discord.com');
+        });
+    </script>
+</body>
+</html>
