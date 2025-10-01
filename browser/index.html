@@ -39,26 +39,24 @@
 <title>Fortnite Tournament Calendar — Browser</title>
 <style>
 :root {
-  /* カラーテーマ（ライト） */
-  --bg: #f5f8fc;
+  --bg: #f3f4f6;
   --panel: #ffffff;
-  --text: #1a1a2e;
+  --text: #0f172a;
   --muted: #6b7280;
-  --accent: #1f8ef1;
-  --border: #e0e6ef;
-  --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  --radius: 14px;
+  --accent: #1da1f2; /* Twitterブルー */
+  --border: #e5e7eb;
+  --radius: 12px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="dark"] {
-  /* ダークモード */
-  --bg: #101322;
-  --panel: #1a1f36;
-  --text: #e5e9f0;
+  --bg: #0d1117; /* Discord/VSCode系のダーク */
+  --panel: #161b22;
+  --text: #e6edf3;
   --muted: #9ca3af;
-  --accent: #4fc3f7;
-  --border: #2a2f45;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --accent: #5865f2; /* Discordブルー */
+  --border: #30363d;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 body {
@@ -70,104 +68,117 @@ body {
   transition: background 0.3s, color 0.3s;
 }
 
-/* ヘッダー */
+/* ヘッダー（Twitter/Discord風） */
 header {
-  background: linear-gradient(135deg, var(--accent), #5ac8fa);
-  color: #fff;
-  padding: 30px 20px;
-  text-align: center;
+  background: var(--panel);
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   box-shadow: var(--shadow);
 }
 header h1 {
   margin: 0;
-  font-size: 2rem;
-  letter-spacing: 1px;
+  font-size: 1.4rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
-header p {
-  margin-top: 5px;
-  font-size: 1rem;
-  opacity: 0.9;
+header nav a {
+  margin-left: 20px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+header nav a:hover {
+  color: var(--accent);
 }
 
-/* コンテナ */
+/* コンテナ（カード一覧） */
 .container {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 20px;
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  max-width: 960px;
+  margin: 30px auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* イベントカード */
+/* イベントカード（Twitterのタイムライン風） */
 .card {
   background: var(--panel);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s, box-shadow 0.3s;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.2s;
 }
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 .card h2 {
-  font-size: 1.25rem;
-  margin: 0 0 10px;
+  font-size: 1.2rem;
+  margin: 0 0 6px;
   color: var(--accent);
 }
 .card p {
   font-size: 0.95rem;
   color: var(--muted);
-  flex-grow: 1;
+  margin: 0 0 10px;
 }
 .card .date {
-  margin-top: 15px;
-  font-size: 0.9rem;
-  font-weight: bold;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text);
+  margin-top: 6px;
 }
 
-/* ボタン */
+/* ボタン（Twitter風） */
 .btn {
-  margin-top: 20px;
-  padding: 10px 16px;
+  margin-top: 14px;
+  padding: 8px 14px;
   background: var(--accent);
   color: #fff;
-  text-align: center;
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-  font-weight: 500;
+  border-radius: 9999px; /* pill形状 */
+  font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: background 0.3s;
+  display: inline-block;
+  transition: background 0.2s, transform 0.1s;
 }
 .btn:hover {
-  background: #1476c8;
+  background: #0d8ddc;
+  transform: scale(1.05);
 }
 
-/* ダークモード切り替えスイッチ */
+/* テーマ切替ボタン（右下フローティング） */
 .theme-toggle {
   position: fixed;
-  top: 20px;
+  bottom: 20px;
   right: 20px;
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: var(--accent);
+  color: #fff;
+  border: none;
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   box-shadow: var(--shadow);
+  font-size: 1.2rem;
+  transition: background 0.3s, transform 0.2s;
 }
 .theme-toggle:hover {
-  background: var(--accent);
-  color: #fff;
+  background: #0d8ddc;
+  transform: scale(1.1);
 }
 
 </style>
