@@ -38,93 +38,137 @@
 
 <title>Fortnite Tournament Calendar — Browser</title>
 <style>
-:root{
-  --bg:#f3f7fb; --panel:#ffffff; --muted:#6b7280; --accent:#1f8ef1; --border:#e6eef9; --radius:12px;
-  --shadow:0 8px 24px rgba(15,23,42,0.06);
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
-}
-html,body{
-  height:100%; margin:0;
-  background:linear-gradient(180deg,var(--bg),#eaf3fb);
-}
-.wrap{
-  max-width:1200px; margin:28px auto; padding:20px;
-}
-header{
-  display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;
-}
-h1{font-size:20px;margin:0}
-.controls{display:flex;gap:8px;align-items:center}
-button{
-  background:var(--accent); color:#fff; border:none; padding:6px 12px;
-  border-radius:10px; cursor:pointer; box-shadow:var(--shadow);
-}
-.btn-ghost{
-  background:transparent; color:var(--accent); border:1px solid rgba(31,142,241,0.12);
-}
-.layout{
-  display:grid; grid-template-columns:minmax(320px,1fr) minmax(400px,1fr); gap:18px;
-}
-.sidebar{flex-shrink:0;}
-.panel{
-  background:var(--panel); border-radius:var(--radius); padding:14px;
-  border:1px solid var(--border); box-shadow:var(--shadow); min-width:300px;
-}
-.sidebar .month{
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
-}
-.calendar{
-  display:grid; grid-template-columns:repeat(7,1fr); gap:4px;
-}
-.calendar .day{
-  padding:4px; border-radius:6px; text-align:center;
-  background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid #f0f6fb;
-  min-height:40px; font-size:12px; cursor:pointer;
-}
-.day .date{font-weight:600}
-.day .events div{
-  font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.today{box-shadow:0 0 0 2px rgba(31,142,241,0.12);}
-.toolbar{
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
-}
-.event-list{
-  display:grid; gap:10px; overflow-y:auto; max-height:70vh; min-width:350px;
-}
-.event-card{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:10px; border-radius:10px; background:linear-gradient(180deg,#ffffff,#fbfdff);
-  border:1px solid #f0f6fb; flex-shrink:0; word-break:break-word;
-}
-.meta{font-size:13px}
-.title{font-weight:700}
-.when{color:var(--muted); font-size:13px}
-.small{font-size:13px}
-.muted-small{color:var(--muted)}
-footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px;}
-@media (max-width:90000px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{order:2}
-}
-/* カレンダーのイベント文字を小さくして改行も許可 */
-.calendar .day .events div {
-  font-size:9px;           /* 文字をさらに小さく */
-  line-height:1em;         /* 行間を圧縮 */
-  max-height:2.2em;        /* 最大2行まで表示 */
-  overflow:hidden;         
-  text-overflow:ellipsis;  
-  white-space:normal;      /* 改行を許可 */
-  word-break:break-word;   /* 単語も途中で改行 */
+:root {
+  /* カラーテーマ（ライト） */
+  --bg: #f5f8fc;
+  --panel: #ffffff;
+  --text: #1a1a2e;
+  --muted: #6b7280;
+  --accent: #1f8ef1;
+  --border: #e0e6ef;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  --radius: 14px;
 }
 
-/* 日付も少し小さく */
-.day .date {
-  font-size:10px;
-  font-weight:600;
+[data-theme="dark"] {
+  /* ダークモード */
+  --bg: #101322;
+  --panel: #1a1f36;
+  --text: #e5e9f0;
+  --muted: #9ca3af;
+  --accent: #4fc3f7;
+  --border: #2a2f45;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* 1セルあたりのイベント表示数を制限 */
+body {
+  font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ヘッダー */
+header {
+  background: linear-gradient(135deg, var(--accent), #5ac8fa);
+  color: #fff;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+header p {
+  margin-top: 5px;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* コンテナ */
+.container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* イベントカード */
+.card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+.card h2 {
+  font-size: 1.25rem;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+.card p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  flex-grow: 1;
+}
+.card .date {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text);
+}
+
+/* ボタン */
+.btn {
+  margin-top: 20px;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.btn:hover {
+  background: #1476c8;
+}
+
+/* ダークモード切り替えスイッチ */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.theme-toggle:hover {
+  background: var(--accent);
+  color: #fff;
+}
 
 </style>
 </head>
