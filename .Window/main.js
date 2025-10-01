@@ -32,6 +32,8 @@ app.whenReady().then(() => {
   mainWindow.loadFile('index.html');
 
 
+
+
   mainWindow.on('close', (event) => {
     if (!app.isQuitting) {
       event.preventDefault(); 
