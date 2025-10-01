@@ -3,39 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta charset="UTF-8">
-
-  <!-- レスポンシブ対応 -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- サイトタイトル -->
-<title>Fortnite Events Browser</title>
-
-  <!-- サイトの説明（検索エンジン用） -->
-<meta name="description" content="Fortniteの大会スケジュールとカレンダーを確認できるブラウザツールです。">
-
-  <!-- キーワード（SEO用） -->
-<meta name="keywords" content="Fortnite, フォートナイト, 大会, トーナメント, カレンダー, FNCS">
-
-  <!-- 作者 -->
-<meta name="author" content="MeroFN">
-
-  <!-- テーマカラー（モバイルブラウザでのUIカラー） -->
-<meta name="theme-color" content="#1f8ef1">
-
-  <!-- Open Graph (SNSでのシェア用) -->
-<meta property="og:title" content="Fortnite Events Browser">
-<meta property="og:description" content="Fortniteの大会スケジュールを一覧で表示。リマインダーや通知機能付き。">
-<meta property="og:image" content="https://fnevents.merofn.com/assets/og-image.png">
-<meta property="og:url" content="https://fnevents.merofn.com/browser/index.html">
-<meta property="og:type" content="website">
-
-  <!-- Twitterカード -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fortnite Events Browser">
-<meta name="twitter:description" content="Fortnite大会スケジュールを確認！通知やリマインダー機能も。">
-<meta name="twitter:image" content="https://fnevents.merofn.com/assets/og-image.png">
-
 <title>Fortnite Tournament Calendar — Browser</title>
 <style>
 /* === 全体背景 === */
@@ -47,12 +14,32 @@ body {
   color: #dcddde;
 }
 
+/* レイアウト全体 */
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* パネル共通 */
+.panel {
+  background: #2b2d31;
+  border: 1px solid #202225;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
 /* === カレンダー全体 === */
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
-  background: #202225; /* グリッドの線として表示 */
+  background: #202225; /* グリッドの線 */
   border-radius: 8px;
   overflow: hidden;
 }
@@ -90,22 +77,16 @@ body {
 .calendar .day:hover {
   background: #3e4147;
 }
-
-/* === 日付番号 === */
 .day .date {
   font-weight: 600;
   font-size: 12px;
   margin-bottom: 4px;
   color: #fff;
 }
-
-/* === 今日 === */
 .day.today {
   border: 2px solid #5865f2;
   background: #40444b;
 }
-
-/* === イベント === */
 .day .events {
   display: flex;
   flex-direction: column;
@@ -135,26 +116,40 @@ button {
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
 }
-button:hover {
-  background: #4752c4;
+button:hover { background: #4752c4; }
+button:active { transform: scale(0.96); }
+button:disabled { background: #4f545c; color: #b9bbbe; cursor: not-allowed; }
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #4f545c;
+  color: #dcddde;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease, border 0.15s ease;
 }
-button:active {
-  transform: scale(0.96);
-}
-button:disabled {
+.btn-ghost:hover {
   background: #4f545c;
-  color: #b9bbbe;
-  cursor: not-allowed;
+  border-color: #5865f2;
 }
 
-/* === リマインダー一覧 === */
-.reminders {
-  margin-top: 16px;
-  background: #2b2d31;
+/* === イベントリスト === */
+.event-list { display: flex; flex-direction: column; gap: 8px; }
+.event-card {
+  background: #36393f;
   border: 1px solid #202225;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease;
 }
+.event-card:hover { background: #3e4147; }
+.event-card .title { font-size: 14px; font-weight: 600; color: #fff; }
+.event-card .when { font-size: 12px; color: #b9bbbe; }
+
+/* === リマインダーパネル === */
 .reminders h2 {
   font-size: 14px;
   font-weight: 700;
@@ -172,35 +167,24 @@ button:disabled {
   margin-bottom: 6px;
   transition: background 0.15s ease;
 }
-.reminder-item:hover {
-  background: #3e4147;
-}
-.reminder-item .title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #dcddde;
-}
-.reminder-item .time {
-  font-size: 12px;
-  color: #b9bbbe;
-}
+.reminder-item:hover { background: #3e4147; }
+.reminder-item .title { font-size: 13px; font-weight: 600; color: #dcddde; }
+.reminder-item .time { font-size: 12px; color: #b9bbbe; }
 .reminder-item button {
   background: #5865f2;
   padding: 4px 10px;
   font-size: 12px;
   border-radius: 4px;
 }
-
 </style>
 </head>
 <body>
-<div class="wrap">
 <header>
-<h1>Fortnite Tournament Calendar</h1>
-<div class="controls">
-<button id="req-perm">通知を許可</button>
-<button id="refresh" class="btn-ghost">再取得</button>
-</div>
+  <h1>Fortnite Tournament Calendar</h1>
+  <div class="controls">
+    <button id="req-perm">通知を許可</button>
+    <button id="refresh" class="btn-ghost">再取得</button>
+  </div>
 </header>
 
 <div class="layout">
@@ -219,24 +203,26 @@ button:disabled {
     <div class="calendar" id="calendarGrid"></div>
   </aside>
 
-  <!-- 右側：イベント詳細 -->
-  <main class="panel">
-    <div class="toolbar">
-      <div>
-        <div class="small muted-small">イベント数</div>
-        <div id="eventCount" class="title">0</div>
+  <!-- 右側：イベント + リマインダー -->
+  <div class="right-column" style="display:flex;flex-direction:column;gap:16px;">
+    <main class="panel">
+      <div class="toolbar" style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div>
+          <div class="small muted-small">イベント数</div>
+          <div id="eventCount" class="title">0</div>
+        </div>
+        <div class="small muted-small">注意: ブラウザを閉じるとタイマーは停止します</div>
       </div>
-      <div class="small muted-small">
-        注意: ブラウザを閉じるとページ内タイマーは停止します。永続通知はServiceWorker+Pushが必要です。
-      </div>
-    </div>
-    <div id="events" class="event-list"></div>
-    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:space-between">
-      <div class="small muted-small">リマインダー保存: localStorage</div>
-      <button id="clearReminders" class="btn-ghost">リセット</button>
-    </div>
-  </main>
-</div>
+      <div id="events" class="event-list"></div>
+    </main>
+
+    <!-- リマインダーを独立パネルに -->
+    <section class="panel reminders">
+      <h2>リマインダー</h2>
+      <div id="reminderList"></div>
+      <button id="clearReminders" class="btn-ghost">全リマインダー削除</button>
+    </section>
+  </div>
 </div>
 
 <script>
@@ -258,9 +244,9 @@ function addReminder(r){const all=loadReminders();all.push(r);saveReminders(all)
 function removeReminder(id){const all=loadReminders().filter(x=>x.id!==id);saveReminders(all);}
 
 async function requestPermission(){
-  if(!('Notification' in window)) return alert('このブラウザは Notifications をサポートしていません');
+  if(!('Notification' in window)) return alert('未対応');
   const p=await Notification.requestPermission();
-  document.getElementById('req-perm').textContent=(p==='granted')?'通知許可済み':'通知許可';
+  document.getElementById('req-perm').textContent=(p==='granted')?'通知許可済み':'通知を許可';
   return p;
 }
 
@@ -271,14 +257,10 @@ function scheduleReminder(rem){
   const timeout=fireAt-now;
   if(timeout>2147483640)return;
   const tid=setTimeout(()=>{
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.ready.then(reg=>reg.showNotification(rem.title,{body:`開始 ${rem.whenMinutesBefore} 分前`}));
-    }else{
-      new Notification(rem.title,{body:`開始 ${rem.whenMinutesBefore} 分前`});
-    }
+    new Notification(rem.title,{body:`開始 ${rem.whenMinutesBefore} 分前`});
     removeReminder(rem.id);
     delete scheduledTimers[rem.id];
-    renderEvents();
+    renderReminders();
   },timeout);
   scheduledTimers[rem.id]=tid;
 }
@@ -302,13 +284,12 @@ async function fetchEvents(){
           startUtc:win.beginTime,
           endUtc:win.endTime,
           region:ev.regions?ev.regions.join(','):'Asia',
-          meta:win.metadata||null
         });
       });
     });
     renderCalendar();
     renderEvents();
-  }catch(e){console.error(e);alert('イベントの取得に失敗しました。');}
+  }catch(e){console.error(e);alert('イベント取得失敗');}
 }
 
 function renderCalendar(){
@@ -337,10 +318,7 @@ function renderCalendar(){
     }
 
     if(d.toDateString()===new Date().toDateString()) cell.classList.add('today');
-
-    // 日付クリックで右側イベント詳細表示
     cell.addEventListener('click',()=>renderEvents(eventsOnDay));
-
     grid.appendChild(cell);
   }
 
@@ -357,7 +335,7 @@ function renderEvents(list=null){
 
   sorted.forEach(ev=>{
     const card=document.createElement('div'); card.className='event-card';
-    const left=document.createElement('div'); left.className='meta';
+    const left=document.createElement('div');
     const t=document.createElement('div'); t.className='title'; t.textContent=ev.title;
     const when=document.createElement('div'); when.className='when';
     when.textContent=fmtDateTime(new Date(ev.startUtc)) + (ev.region?` · ${ev.region}`:'');
@@ -368,18 +346,33 @@ function renderEvents(list=null){
     subscribe.onclick=async ()=>{
       if(Notification.permission!=='granted'){ const p=await requestPermission(); if(p!=='granted') return; }
       const id='rem_'+(ev.id||Math.random().toString(36).slice(2));
-      addReminder({id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN});
-      scheduleReminder({id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN});
-      renderEvents(list);
+      const rem={id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN};
+      addReminder(rem);
+      scheduleReminder(rem);
+      renderReminders();
       subscribe.textContent='セット済み'; subscribe.disabled=true;
     };
-
-    const existing=loadReminders().find(r=>r.timeUtc===ev.startUtc && r.title===ev.title);
-    if(existing){subscribe.textContent='セット済み'; subscribe.disabled=true;}
+    if(loadReminders().find(r=>r.timeUtc===ev.startUtc && r.title===ev.title)){
+      subscribe.textContent='セット済み'; subscribe.disabled=true;
+    }
 
     right.appendChild(subscribe);
     card.appendChild(left); card.appendChild(right);
     container.appendChild(card);
+  });
+}
+
+function renderReminders(){
+  const list=document.getElementById('reminderList'); list.innerHTML='';
+  const arr=loadReminders();
+  arr.forEach(r=>{
+    const item=document.createElement('div'); item.className='reminder-item';
+    const left=document.createElement('div');
+    left.innerHTML=`<div class="title">${r.title}</div><div class="time">${fmtDateTime(new Date(r.timeUtc))}</div>`;
+    const btn=document.createElement('button'); btn.textContent='削除';
+    btn.onclick=()=>{removeReminder(r.id);renderReminders();};
+    item.appendChild(left); item.appendChild(btn);
+    list.appendChild(item);
   });
 }
 
@@ -392,16 +385,11 @@ document.getElementById('clearReminders').addEventListener('click',()=>{
     localStorage.removeItem('fn_reminders');
     Object.values(scheduledTimers).forEach(t=>clearTimeout(t));
     for(const k in scheduledTimers) delete scheduledTimers[k];
-    renderEvents();
+    renderReminders();
   }
 });
 
-(function(){restoreAndSchedule();fetchEvents().catch(()=>{});renderCalendar();renderEvents();})();
-
-// Service Worker registration
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').then(reg=>console.log('SW registered')).catch(err=>console.warn('SW failed',err));
-}
+(function(){restoreAndSchedule();fetchEvents();renderCalendar();renderEvents();renderReminders();})();
 </script>
 </body>
 </html>
