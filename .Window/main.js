@@ -26,7 +26,7 @@ function createWindow() {
   });
 
   Menu.setApplicationMenu(null);
-  mainWindow.loadFile(path.join(__dirname, 'Status.html')).catch((err) => {
+  mainWindow.loadFile(path.join(__dirname, 'serverstatus.html')).catch((err) => {
     console.error('Failed to load Status.html:', err);
     showErrorPage();
   });
