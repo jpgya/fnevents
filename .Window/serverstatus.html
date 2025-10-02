@@ -41,7 +41,7 @@
             const credentials = btoa(`${clientId}:${clientSecret}`);
 
             try {
-                const response = await fetch('https://api.epicgames.dev/epic/oauth/v1/token', {
+                const response = await fetch('https://account-public-service-prod.ol.epicgames.com/account/api/oauth/token', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Basic ${credentials}`,
