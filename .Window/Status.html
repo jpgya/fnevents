@@ -21,10 +21,6 @@
             font-size: 16px;
             margin-bottom: 20px;
         }
-        #status-image {
-            max-width: 100%;
-            height: auto;
-        }
     </style>
 </head>
 <body>
@@ -32,13 +28,12 @@
     <div id="content">
         <h1 id="status">Loading...</h1>
         <p id="message"></p>
-        <img id="status-image" src="" alt="Status Image" style="display:none;">
     </div>
 
     <script>
         async function getAccessToken() {
-            const clientId = '02612880aa774fb28e3741d3e01501fd'; 
-            const clientSecret = '7ZP]vm+i.uoetw@RxqRXpod_RNyjPC-%GM#ac~Pc'; 
+            const clientId = '02612880aa774fb28e3741d3e01501fd';
+            const clientSecret = '7ZP]vm+i.uoetw@RxqRXpod_RNyjPC-%GM#ac~Pc';
             const credentials = btoa(`${clientId}:${clientSecret}`);
 
             try {
@@ -51,11 +46,14 @@
                     body: 'grant_type=client_credentials'
                 });
 
-                if (!response.ok) throw new Error('Token request failed');
+                if (!response.ok) {
+                    throw new Error(`Token request failed: ${response.statusText}`);
+                }
                 const data = await response.json();
                 return data.access_token;
             } catch (error) {
                 console.error('Error getting access token:', error);
+                window.location.href = 'error.html'; 
                 throw error;
             }
         }
@@ -69,13 +67,19 @@
                     }
                 });
 
-                if (!response.ok) throw new Error('API request failed');
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.statusText}`);
+                }
                 const data = await response.json();
                 const fortniteStatus = data.find(s => s.serviceId === 'Fortnite');
 
+                
+                if (!fortniteStatus) {
+                    throw new Error('Fortnite service status not found in response');
+                }
+
                 const statusDiv = document.getElementById('status');
                 const messageP = document.getElementById('message');
-                const imageImg = document.getElementById('status-image');
 
                 if (fortniteStatus.status === 'UP') {
                     statusDiv.textContent = 'サーバーはオンラインです';
@@ -86,16 +90,9 @@
                 }
 
                 messageP.textContent = fortniteStatus.message || 'No message available';
-
-               
-                if (fortniteStatus.image) {
-                    imageImg.src = `https://img.${fortniteStatus.image}`;
-                    imageImg.style.display = 'block';
-                }
             } catch (error) {
                 console.error('Error fetching status:', error);
-                document.getElementById('status').textContent = 'ステータス取得エラー';
-                document.getElementById('message').textContent = error.message;
+                window.location.href = 'error.html'; 
             }
         }
 
