@@ -61,7 +61,7 @@ function showErrorPage() {
     mainWindow.loadFile(path.join(__dirname, 'error.html')).catch((err) => {
       console.error('Failed to load error.html:', err);
       isErrorPageLoaded = false;
-      mainWindow.webContents.executeJavaScript('alert("エラーページもロードできませんでした。");');
+      mainWindow.webContents.executeJavaScript('alert("エラーが発生しました。");');
     });
   }
 }
