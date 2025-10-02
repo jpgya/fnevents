@@ -16,14 +16,14 @@
         </div>
     </div>
     <script>
+        const { ipcRenderer } = window.electron;
+
         document.getElementById('restartBtn').addEventListener('click', () => {
-          
-            require('electron').app.relaunch();
-            require('electron').app.exit();
+            ipcRenderer.send('restart-app');
         });
 
         document.getElementById('discordBtn').addEventListener('click', () => {
-            require('electron').shell.openExternal('https://discord.gg/QKjdjb8rnh');//これは、electronアプリのみでしか機能しないよ by 莉音
+            ipcRenderer.send('open-discord');
         });
     </script>
 </body>
