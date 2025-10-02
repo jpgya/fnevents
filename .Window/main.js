@@ -6,6 +6,8 @@ let mainWindow = null;
 let tray = null;
 let isErrorPageLoaded = false;
 
+app.setPath('cache', path.join(__dirname, 'cache')); 
+
 const autoLauncher = new AutoLaunch({
   name: 'FNEvent',
   path: app.getPath('exe'),

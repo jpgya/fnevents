@@ -51,7 +51,7 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`トークン取得に失敗: ${response.status} ${response.statusText}`);
+                    throw new Error(`トークン取得失敗: ${response.status} ${await response.text()}`);
                 }
                 const data = await response.json();
                 return data.access_token;
@@ -75,9 +75,10 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`APIリクエスト失敗: ${response.status} ${response.statusText}`);
+                    throw new Error(`APIリクエスト失敗: ${response.status} ${await response.text()}`);
                 }
                 const data = await response.json();
+                console.log('API Response:', data); //この問題が修正できたら消してね
                 const fortniteStatus = data.find(s => s.serviceId === 'Fortnite');
 
                 if (!fortniteStatus) {
