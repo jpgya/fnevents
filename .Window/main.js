@@ -1,29 +1,17 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
 const AutoLaunch = require('auto-launch');
 const path = require('path');
+
 let mainWindow = null;
 let tray = null;
+let isErrorPageLoaded = false; // エラーページのリダイレクトループ防止
 
 const autoLauncher = new AutoLaunch({
   name: 'FNEvent',
   path: app.getPath('exe'),
 });
 
-
-function showErrorPage() {
-  if (mainWindow) {
-    mainWindow.loadFile('error.html').catch((err) => {
-      console.error('Failed to load error.html:', err);
-    });
-  }
-}
-
-app.whenReady().then(() => {
-  autoLauncher.enable().catch((err) => {
-    console.error('AutoLaunch error:', err);
-    showErrorPage();
-  });
-
+function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -37,7 +25,7 @@ app.whenReady().then(() => {
 
   Menu.setApplicationMenu(null);
   mainWindow.loadFile('Status.html').catch((err) => {
-    console.error('Failed to load index.html:', err);
+    console.error('Failed to load Status.html:', err);
     showErrorPage();
   });
 
@@ -63,8 +51,27 @@ app.whenReady().then(() => {
     }
     return false;
   });
+}
 
-  tray = new Tray(path.join(__dirname, 'icon.png')); //莉音へ　：　忘れないために書きます。ここにアイコンの正しいパスに置き換えてね
+function showErrorPage() {
+  if (mainWindow && !isErrorPageLoaded) {
+    isErrorPageLoaded = true;
+    mainWindow.loadFile('error.html').catch((err) => {
+      console.error('Failed to load error.html:', err);
+      isErrorPageLoaded = false; // リトライ可能にする
+    });
+  }
+}
+
+app.whenReady().then(() => {
+  autoLauncher.enable().catch((err) => {
+    console.error('AutoLaunch error:', err);
+    showErrorPage();
+  });
+
+  createWindow();
+
+  tray = new Tray(path.join(__dirname, 'icon.png'));
   const contextMenu = Menu.buildFromTemplate([
     { label: 'アプリを表示', click: () => mainWindow.show() },
     {
@@ -75,11 +82,21 @@ app.whenReady().then(() => {
       },
     },
   ]);
-  tray.setToolTip('MyElectronApp');
+  tray.setToolTip('FNEvent');
   tray.setContextMenu(contextMenu);
   tray.on('double-click', () => {
     mainWindow.show();
   });
+});
+
+// IPCハンドラ: error.htmlからのリクエスト処理
+ipcMain.on('restart-app', () => {
+  app.relaunch();
+  app.exit();
+});
+
+ipcMain.on('open-discord', () => {
+  require('electron').shell.openExternal('https://discord.gg/QKjdjb8rnh');
 });
 
 ipcMain.on('error-in-renderer', (event, error) => {
@@ -94,7 +111,7 @@ process.on('uncaughtException', (err) => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    return;
+    app.quit();
   }
 });
 
