@@ -1,103 +1,399 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FNEVENTS 公式サイト</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Roboto', sans-serif;
-      color: #fff;
-      background: linear-gradient(135deg, #2b2b5c, #1e1e2f);
-      min-height: 100vh;
-    }
-    header {
-      text-align: center;
-      padding: 60px 20px 40px;
-      background: linear-gradient(to right, #4b3cff, #6c5cff);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    header h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-    }
-    header p {
-      font-size: 1.2rem;
-      color: #ffcc00;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-    }
-    main {
-      text-align: center;
-      padding: 50px 20px;
-    }
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 30px;
-      color: #ffcc00;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    }
-    .download-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      flex-wrap: wrap;
-      margin-bottom: 30px;
-    }
-    .download-buttons a {
-      display: inline-block;
-      padding: 18px 35px;
-      background: linear-gradient(135deg, #ff4b3c, #ff6b5c);
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1rem;
-      color: #fff;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-      transition: all 0.3s;
-    }
-    .download-buttons a:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-      background: linear-gradient(135deg, #ff6b5c, #ff4b3c);
-    }
-    .notice {
-      font-size: 1rem;
-      color: #ffd633;
-      margin-bottom: 30px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      color: #bbb;
-      border-top: 1px solid rgba(255,255,255,0.2);
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fortnite Tournament Calendar — Browser</title>
+<style>
+/* === 全体背景 === */
+body {
+  background: #313338;
+  margin: 0;
+  padding: 16px;
+  font-family: "gg sans", "Noto Sans JP", sans-serif;
+  color: #dcddde;
+}
+
+/* レイアウト全体 */
+.layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; /* ← 左右比率を調整 */
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* パネル共通 */
+.panel {
+  background: #2b2d31;
+  border: 1px solid #202225;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* === カレンダー全体 === */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: #202225;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 600px;      /* 最大高さ制限 */
+}
+
+/* === 曜日ヘッダー === */
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #b9bbbe;
+  background: #2b2d31;
+}
+.calendar-header div {
+  padding: 8px 0;
+  border-right: 1px solid #202225;
+}
+.calendar-header div:last-child {
+  border-right: none;
+}
+
+/* === 日セル === */
+.calendar .day {
+    /* 正方形に近づける */
+  min-height: auto;       /* 強制高さを解除 */
+  max-width: 100px;   /* 最大幅を制限 */
+  padding: 4px;
+  font-size: 5px;
+  background: #36393f;
+  border: 1px solid #202225;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  transition: background 0.15s ease;
+}
+.calendar .day:hover {
+  background: #3e4147;
+}
+.day .date {
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #fff;
+}
+.day.today {
+  border: 2px solid #5865f2;
+  background: #40444b;
+}
+.day .events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+.day .events div {
+  font-size: 11px;
+  background: #5865f2;
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === ボタン === */
+button {
+  background: #5865f2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+button:hover { background: #4752c4; }
+button:active { transform: scale(0.96); }
+button:disabled { background: #4f545c; color: #b9bbbe; cursor: not-allowed; }
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #4f545c;
+  color: #dcddde;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease, border 0.15s ease;
+}
+.btn-ghost:hover {
+  background: #4f545c;
+  border-color: #5865f2;
+}
+
+/* === イベントリスト === */
+.event-list { display: flex; flex-direction: column; gap: 8px; }
+.event-card {
+  background: #36393f;
+  border: 1px solid #202225;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease;
+}
+.event-card:hover { background: #3e4147; }
+.event-card .title { font-size: 14px; font-weight: 600; color: #fff; }
+.event-card .when { font-size: 12px; color: #b9bbbe; }
+
+/* === リマインダーパネル === */
+.reminders h2 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #fff;
+}
+.reminder-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #36393f;
+  border: 1px solid #202225;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 6px;
+  transition: background 0.15s ease;
+}
+.reminder-item:hover { background: #3e4147; }
+.reminder-item .title { font-size: 13px; font-weight: 600; color: #dcddde; }
+.reminder-item .time { font-size: 12px; color: #b9bbbe; }
+.reminder-item button {
+  background: #5865f2;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>FNEVENTS</h1>
-    <p>ガチ勢向けフォートナイト大会カレンダー通知サービス</p>
-  </header>
-  <main>
-    <h2>ソフト版ダウンロード</h2>
-    <div class="download-buttons">
-      <a href="#" onclick="alert('Windows版は開発中です')">Windows版</a>
-      <a href="https://drive.google.com/uc?export=download&id=1j9-HYJ4mFNSAgpybLMb9fKshpI-lQTY3" download>Mac版をダウンロード</a>
+<header>
+  <h1>Fortnite Tournament Calendar</h1>
+  <div class="controls">
+    <button id="req-perm">通知を許可</button>
+    <button id="refresh" class="btn-ghost">再取得</button>
+  </div>
+</header>
 
+<div class="layout">
+  <!-- 左側：カレンダー -->
+  <aside class="panel sidebar">
+    <div class="month">
+      <div>
+        <div id="monthTitle" class="muted-small">--</div>
+        <div id="monthRange" class="muted">--</div>
+      </div>
+      <div>
+        <button id="prevMonth" class="btn-ghost">◀</button>
+        <button id="nextMonth" class="btn-ghost">▶</button>
+      </div>
     </div>
-    <p class="notice">
-      現在Windows版は開発中です。ブラウザ版またはMac版はいかがですか？
-    </p>
-    <div class="download-buttons">
-      <a href="https://fnevents.merofn.com/browser/">ブラウザ版はこちら</a>
-    </div>
-  </main>
-  <footer>
-    © 2025 FNEVENTS. All rights reserved.
-  </footer>
+    <div class="calendar" id="calendarGrid"></div>
+  </aside>
+
+  <!-- 右側：イベント + リマインダー -->
+  <div class="right-column" style="display:flex;flex-direction:column;gap:16px;">
+    <main class="panel">
+      <div class="toolbar" style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div>
+          <div class="small muted-small">イベント数</div>
+          <div id="eventCount" class="title">0</div>
+        </div>
+        <div class="small muted-small">注意: ブラウザを閉じるとタイマーは停止します</div>
+      </div>
+      <div id="events" class="event-list"></div>
+    </main>
+
+    <!-- リマインダーを独立パネルに -->
+    <section class="panel reminders">
+      <h2>リマインダー</h2>
+      <div id="reminderList"></div>
+      <button id="clearReminders" class="btn-ghost">全リマインダー削除</button>
+    </section>
+  </div>
+</div>
+
+<script>
+const EVENTS_URL='https://fljpapi.vigyanfv.workers.dev/tournamentlist?region=ASIA&platform=Windows&cosmeticsinfo=true';
+const REMIND_BEFORE_MIN=15;
+
+function fmtDateTime(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+
+let events=[]; 
+let viewDate=new Date();
+const scheduledTimers={};
+
+function loadReminders(){try{return JSON.parse(localStorage.getItem('fn_reminders')||'[]')}catch(e){return []}}
+function saveReminders(arr){localStorage.setItem('fn_reminders',JSON.stringify(arr))}
+function addReminder(r){const all=loadReminders();all.push(r);saveReminders(all);}
+function removeReminder(id){const all=loadReminders().filter(x=>x.id!==id);saveReminders(all);}
+
+async function requestPermission(){
+  if(!('Notification' in window)) return alert('未対応');
+  const p=await Notification.requestPermission();
+  document.getElementById('req-perm').textContent=(p==='granted')?'通知許可済み':'通知を許可';
+  return p;
+}
+
+function scheduleReminder(rem){
+  const now=Date.now();
+  const fireAt=new Date(rem.timeUtc).getTime()-(rem.whenMinutesBefore||REMIND_BEFORE_MIN)*60000;
+  if(fireAt<=now)return;
+  const timeout=fireAt-now;
+  if(timeout>2147483640)return;
+  const tid=setTimeout(()=>{
+    new Notification(rem.title,{body:`開始 ${rem.whenMinutesBefore} 分前`});
+    removeReminder(rem.id);
+    delete scheduledTimers[rem.id];
+    renderReminders();
+  },timeout);
+  scheduledTimers[rem.id]=tid;
+}
+
+function restoreAndSchedule(){loadReminders().forEach(r=>scheduleReminder(r));}
+
+async function fetchEvents(){
+  try{
+    const res=await fetch(EVENTS_URL,{cache:'no-store'});
+    if(!res.ok)throw new Error('fetch failed '+res.status);
+    const data=await res.json();
+    const added=new Set();
+    events=[];
+    data.events.forEach(ev=>{
+      ev.eventWindows.forEach(win=>{
+        if(added.has(win.eventWindowId))return;
+        added.add(win.eventWindowId);
+        events.push({
+          id:win.eventWindowId,
+          title:ev.eventGroup+' '+(win.metadata.RoundType||''),
+          startUtc:win.beginTime,
+          endUtc:win.endTime,
+          region:ev.regions?ev.regions.join(','):'Asia',
+        });
+      });
+    });
+    renderCalendar();
+    renderEvents();
+  }catch(e){console.error(e);alert('イベント取得失敗');}
+}
+
+function renderCalendar(){
+  const grid=document.getElementById('calendarGrid'); grid.innerHTML='';
+  const start=new Date(viewDate.getFullYear(),viewDate.getMonth(),1);
+  const startWeekDay=start.getDay();
+  const firstCell=addDays(start,-startWeekDay);
+
+  for(let i=0;i<42;i++){
+    const d=addDays(firstCell,i);
+    const cell=document.createElement('div'); cell.className='day';
+    if(d.getMonth()!==viewDate.getMonth()) cell.style.opacity=0.4;
+
+    const dateDiv=document.createElement('div'); dateDiv.className='date';
+    dateDiv.textContent=d.getDate(); cell.appendChild(dateDiv);
+
+    const eventsOnDay=events.filter(ev=>new Date(ev.startUtc).toDateString()===d.toDateString());
+    if(eventsOnDay.length){
+      const evWrap=document.createElement('div'); evWrap.className='events';
+      eventsOnDay.slice(0,2).forEach(ev=>{
+        const e=document.createElement('div');
+        e.textContent='• ' + ev.title;
+        evWrap.appendChild(e);
+      });
+      cell.appendChild(evWrap);
+    }
+
+    if(d.toDateString()===new Date().toDateString()) cell.classList.add('today');
+    cell.addEventListener('click',()=>renderEvents(eventsOnDay));
+    grid.appendChild(cell);
+  }
+
+  document.getElementById('monthTitle').textContent=viewDate.toLocaleString('default',{month:'long',year:'numeric'});
+  document.getElementById('monthRange').textContent=
+    `${new Date(viewDate.getFullYear(),viewDate.getMonth(),1).toLocaleDateString()} – ${new Date(viewDate.getFullYear(),viewDate.getMonth()+1,0).toLocaleDateString()}`;
+}
+
+function renderEvents(list=null){
+  const container=document.getElementById('events'); container.innerHTML='';
+  const sorted=list ? [...list] : [...events];
+  sorted.sort((a,b)=>new Date(a.startUtc)-new Date(b.startUtc));
+  document.getElementById('eventCount').textContent=sorted.length;
+
+  sorted.forEach(ev=>{
+    const card=document.createElement('div'); card.className='event-card';
+    const left=document.createElement('div');
+    const t=document.createElement('div'); t.className='title'; t.textContent=ev.title;
+    const when=document.createElement('div'); when.className='when';
+    when.textContent=fmtDateTime(new Date(ev.startUtc)) + (ev.region?` · ${ev.region}`:'');
+    left.appendChild(t); left.appendChild(when);
+
+    const right=document.createElement('div');
+    const subscribe=document.createElement('button'); subscribe.textContent='リマインド';
+    subscribe.onclick=async ()=>{
+      if(Notification.permission!=='granted'){ const p=await requestPermission(); if(p!=='granted') return; }
+      const id='rem_'+(ev.id||Math.random().toString(36).slice(2));
+      const rem={id,title:ev.title,timeUtc:ev.startUtc,whenMinutesBefore:REMIND_BEFORE_MIN};
+      addReminder(rem);
+      scheduleReminder(rem);
+      renderReminders();
+      subscribe.textContent='セット済み'; subscribe.disabled=true;
+    };
+    if(loadReminders().find(r=>r.timeUtc===ev.startUtc && r.title===ev.title)){
+      subscribe.textContent='セット済み'; subscribe.disabled=true;
+    }
+
+    right.appendChild(subscribe);
+    card.appendChild(left); card.appendChild(right);
+    container.appendChild(card);
+  });
+}
+
+function renderReminders(){
+  const list=document.getElementById('reminderList'); list.innerHTML='';
+  const arr=loadReminders();
+  arr.forEach(r=>{
+    const item=document.createElement('div'); item.className='reminder-item';
+    const left=document.createElement('div');
+    left.innerHTML=`<div class="title">${r.title}</div><div class="time">${fmtDateTime(new Date(r.timeUtc))}</div>`;
+    const btn=document.createElement('button'); btn.textContent='削除';
+    btn.onclick=()=>{removeReminder(r.id);renderReminders();};
+    item.appendChild(left); item.appendChild(btn);
+    list.appendChild(item);
+  });
+}
+
+document.getElementById('prevMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);renderCalendar();});
+document.getElementById('nextMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);renderCalendar();});
+document.getElementById('refresh').addEventListener('click',fetchEvents);
+document.getElementById('req-perm').addEventListener('click',requestPermission);
+document.getElementById('clearReminders').addEventListener('click',()=>{
+  if(confirm('全てのリマインダーを削除しますか？')){
+    localStorage.removeItem('fn_reminders');
+    Object.values(scheduledTimers).forEach(t=>clearTimeout(t));
+    for(const k in scheduledTimers) delete scheduledTimers[k];
+    renderReminders();
+  }
+});
+
+(function(){restoreAndSchedule();fetchEvents();renderCalendar();renderEvents();renderReminders();})();
+</script>
 </body>
 </html>
