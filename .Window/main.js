@@ -4,7 +4,7 @@ const path = require('path');
 
 let mainWindow = null;
 let tray = null;
-let isErrorPageLoaded = false; // エラーページのリダイレクトループ防止
+let isErrorPageLoaded = false;
 
 const autoLauncher = new AutoLaunch({
   name: 'FNEvent',
@@ -24,7 +24,7 @@ function createWindow() {
   });
 
   Menu.setApplicationMenu(null);
-  mainWindow.loadFile('Status.html').catch((err) => {
+  mainWindow.loadFile(path.join(__dirname, 'Status.html')).catch((err) => {
     console.error('Failed to load Status.html:', err);
     showErrorPage();
   });
@@ -56,9 +56,10 @@ function createWindow() {
 function showErrorPage() {
   if (mainWindow && !isErrorPageLoaded) {
     isErrorPageLoaded = true;
-    mainWindow.loadFile('error.html').catch((err) => {
+    mainWindow.loadFile(path.join(__dirname, 'error.html')).catch((err) => {
       console.error('Failed to load error.html:', err);
-      isErrorPageLoaded = false; // リトライ可能にする
+      isErrorPageLoaded = false;
+      mainWindow.webContents.executeJavaScript('alert("エラーページもロードできませんでした。");');
     });
   }
 }
@@ -89,7 +90,6 @@ app.whenReady().then(() => {
   });
 });
 
-// IPCハンドラ: error.htmlからのリクエスト処理
 ipcMain.on('restart-app', () => {
   app.relaunch();
   app.exit();
