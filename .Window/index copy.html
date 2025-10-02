@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FNEVENTS 公式サイト</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: #fff;
+      background: linear-gradient(135deg, #2b2b5c, #1e1e2f);
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(to right, #4b3cff, #6c5cff);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #ffcc00;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    }
+    main {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #ffcc00;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    .download-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .download-buttons a {
+      display: inline-block;
+      padding: 18px 35px;
+      background: linear-gradient(135deg, #ff4b3c, #ff6b5c);
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      transition: all 0.3s;
+    }
+    .download-buttons a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      background: linear-gradient(135deg, #ff6b5c, #ff4b3c);
+    }
+    .notice {
+      font-size: 1rem;
+      color: #ffd633;
+      margin-bottom: 30px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #bbb;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FNEVENTS</h1>
+    <p>ガチ勢向けフォートナイト大会カレンダー通知サービス</p>
+  </header>
+  <main>
+    <h2>ソフト版ダウンロード</h2>
+    <div class="download-buttons">
+      <a href="#" onclick="alert('Windows版は開発中です')">Windows版</a>
+      <a href="https://drive.google.com/uc?export=download&id=1j9-HYJ4mFNSAgpybLMb9fKshpI-lQTY3" download>Mac版をダウンロード</a>
+
+    </div>
+    <p class="notice">
+      現在Windows版は開発中です。ブラウザ版またはMac版はいかがですか？
+    </p>
+    <div class="download-buttons">
+      <a href="https://fnevents.merofn.com/browser/">ブラウザ版はこちら</a>
+    </div>
+  </main>
+  <footer>
+    © 2025 FNEVENTS. All rights reserved.
+  </footer>
+</body>
+</html>
