@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite Server Status</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            font-family: Arial, sans-serif;
+            color: white;
+            padding: 20px;
+        }
+        #status {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        #message {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        #status-image {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="./header.html" style="width:100%; height:60px; border:none; background:transparent;"></iframe>
+    <div id="content">
+        <h1 id="status">Loading...</h1>
+        <p id="message"></p>
+        <img id="status-image" src="" alt="Status Image" style="display:none;">
+    </div>
+
+    <script>
+        async function getAccessToken() {
+            const clientId = '02612880aa774fb28e3741d3e01501fd'; 
+            const clientSecret = '7ZP]vm+i.uoetw@RxqRXpod_RNyjPC-%GM#ac~Pc'; 
+            const credentials = btoa(`${clientId}:${clientSecret}`);
+
+            try {
+                const response = await fetch('https://api.epicgames.dev/epic/oauth/v1/token', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${credentials}`,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'grant_type=client_credentials'
+                });
+
+                if (!response.ok) throw new Error('Token request failed');
+                const data = await response.json();
+                return data.access_token;
+            } catch (error) {
+                console.error('Error getting access token:', error);
+                throw error;
+            }
+        }
+
+        async function fetchServerStatus() {
+            try {
+                const token = await getAccessToken();
+                const response = await fetch('https://lightswitch-public-service-prod06.ol.epicgames.com/lightswitch/api/service/bulk/status?serviceId=Fortnite', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+                const data = await response.json();
+                const fortniteStatus = data.find(s => s.serviceId === 'Fortnite');
+
+                const statusDiv = document.getElementById('status');
+                const messageP = document.getElementById('message');
+                const imageImg = document.getElementById('status-image');
+
+                if (fortniteStatus.status === 'UP') {
+                    statusDiv.textContent = 'サーバーはオンラインです';
+                    statusDiv.style.color = 'green';
+                } else {
+                    statusDiv.textContent = 'サーバーはオフラインです';
+                    statusDiv.style.color = 'red';
+                }
+
+                messageP.textContent = fortniteStatus.message || 'No message available';
+
+               
+                if (fortniteStatus.image) {
+                    imageImg.src = `https://img.${fortniteStatus.image}`;
+                    imageImg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching status:', error);
+                document.getElementById('status').textContent = 'ステータス取得エラー';
+                document.getElementById('message').textContent = error.message;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchServerStatus);
+    </script>
+</body>
+</html>

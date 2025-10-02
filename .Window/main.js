@@ -36,7 +36,7 @@ app.whenReady().then(() => {
   });
 
   Menu.setApplicationMenu(null);
-  mainWindow.loadFile('index.html').catch((err) => {
+  mainWindow.loadFile('status.html').catch((err) => {
     console.error('Failed to load index.html:', err);
     showErrorPage();
   });
