@@ -1,43 +1,99 @@
-# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Generate config file
+        env:
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          echo "window.env = { TOKEN: '$MY_TOKEN' };" > ./config.js
+
+      - name: Clean unwanted files
+        run: |
+          rm -rf node_modules .git .github || true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: '.'
+
+      - name: Generate diff and changed files
+        id: gen
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.event.after }}"
+
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            DIFF=$(git show --pretty=format:"" --unified=0 "$AFTER" || true)
+            FILES=$(git show --pretty=format:"" --name-only "$AFTER" | sort -u || true)
+          else
+            DIFF=$(git diff --no-color --unified=0 "$BEFORE" "$AFTER" || true)
+            FILES=$(git diff --name-only "$BEFORE" "$AFTER" | sort -u || true)
+          fi
+
+          MAX=3800
+          DIFF="${DIFF:0:MAX}"
+          [ -z "$FILES" ] && FILES="No changed files detected."
+
+          echo "$DIFF" > diff.txt
+          echo "$FILES" > files.txt
+
+      - name: Send Discord Embed
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          REPO: ${{ github.repository }}
+          COMPARE_URL: ${{ github.server_url }}/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.event.after }}
+        run: |
+          DIFF=$(cat diff.txt)
+          FILES=$(cat files.txt)
+
+          PAYLOAD=$(jq -n \
+            --arg title "📢 Push detected" \
+            --arg description "```diff\n$DIFF\n```" \
+            --arg repo "$REPO" \
+            --arg compare "$COMPARE_URL" \
+            --arg files "$FILES" \
+            '{
+              username: "GitHub Actions",
+              embeds: [
+                {
+                  title: $title,
+                  description: $description,
+                  color: 5814783,
+                  fields: [
+                    {name: "Repository", value: $repo, inline: true},
+                    {name: "Compare", value: $compare, inline: false},
+                    {name: "Changed files", value: (if ($files|length<=1024) then $files else ($files[0:1000]+"… (truncated)") end), inline: false}
+                  ],
+                  footer: {text: "GitHub Actions - Push Event"}
+                }
+              ]
+            }'
+          )
+
+          curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" "$WEBHOOK"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
