@@ -8,8 +8,7 @@
     },
     "dependencies": {
         "auto-launch": "^5.0.6",
-        "axios": "^1.12.2",
-        "electron": "^38.2.0"
+        "axios": "^1.12.2"
     },
     "build": {
         "appId": "com.jpgya.fnevents",
@@ -20,6 +19,7 @@
         }
     },
     "devDependencies": {
-        "electron-builder": "^26.0.12"
+        "electron-builder": "^26.0.12",
+        "electron": "^38.2.0"
     }
 }
