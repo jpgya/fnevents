@@ -3,7 +3,8 @@
     "version": "v1.0.0",
     "main": "main.js",
     "scripts": {
-        "start": "electron ."
+        "start": "electron .",
+        "build":"electron-builder"
     },
     "dependencies": {
         "auto-launch": "^5.0.6",
